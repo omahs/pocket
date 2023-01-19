@@ -51,4 +51,5 @@ type ConsensusPacemaker interface {
 	NewLeader(*anypb.Any) error
 	GetPrepareQC() (*anypb.Any, error)
 	GetNodeId() uint64
+	IsPrepareQCNil() bool
 }

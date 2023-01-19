@@ -3,6 +3,7 @@ package consensus
 // TODO: Split this file into multiple helpers (e.g. signatures.go, hotstuff_helpers.go, etc...)
 import (
 	"encoding/base64"
+	"fmt"
 	"log"
 
 	typesCons "github.com/pokt-network/pocket/consensus/types"
@@ -82,6 +83,7 @@ func (m *consensusModule) getQuorumCertificate(height uint64, step typesCons.Hot
 
 func (m *consensusModule) findHighQC(msgs []*typesCons.HotstuffMessage) (qc *typesCons.QuorumCertificate) {
 	for _, m := range msgs {
+		fmt.Printf("GOKHAN findHighQC message: %s,      Quorum Certificate: %s", m, m.GetQuorumCertificate())
 		if m.GetQuorumCertificate() == nil {
 			continue
 		}

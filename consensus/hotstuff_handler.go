@@ -16,6 +16,8 @@ type HotstuffMessageHandler interface {
 func (m *consensusModule) handleHotstuffMessage(msg *typesCons.HotstuffMessage) error {
 	step := msg.GetStep()
 
+	m.nodeLog("GOKHAN: HANDLE HOTSTUFF MESSAGE")
+
 	m.nodeLog(typesCons.DebugReceivedHandlingHotstuffMessage(msg))
 	// Pacemaker - Liveness & safety checks
 	if shouldHandle, err := m.paceMaker.ShouldHandleMessage(msg); !shouldHandle {

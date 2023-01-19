@@ -216,6 +216,10 @@ func (m *pacemaker) InterruptRound(reason string) {
 	if !ok {
 		return
 	}
+
+	if consensusMod.IsPrepareQCNil() {
+		quorumCertificate = nil
+	}
 	m.startNextView(quorumCertificate, false)
 }
 

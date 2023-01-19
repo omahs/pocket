@@ -27,6 +27,7 @@ var (
 /*** Prepare Step ***/
 
 func (handler *HotstuffLeaderMessageHandler) HandleNewRoundMessage(m *consensusModule, msg *typesCons.HotstuffMessage) {
+	m.nodeLog("GOKHAN HANDLE LEADER NEW ROUND MESSAGE CALLED")
 	defer m.paceMaker.RestartTimer()
 	handler.emitTelemetryEvent(m, msg)
 
@@ -51,19 +52,22 @@ func (handler *HotstuffLeaderMessageHandler) HandleNewRoundMessage(m *consensusM
 
 	// Likely to be `nil` if blockchain is progressing well.
 	// TECHDEBT: How do we properly validate `prepareQC` here?
-	// prepareQC named as highPrepareQC since when leader is executing it is the highest QC.s
+	// prepareQC named as highPrepareQC since when leader is executing it is the highest QCs
+	//! ERROR is due to the fact that this returns a non-nil highPrepareQC
 	highPrepareQC := m.findHighQC(m.messagePool[NewRound])
 
 	// TODO: Add test to make sure same block is not applied twice if round is interrupted after being 'Applied'.
 	// TODO: Add more unit tests for these checks...
 	if m.shouldPrepareNewBlock(highPrepareQC) {
+		m.nodeLog("GOKHAN SHOULD PREPARE NEW BLOCK")
 		block, err := m.prepareAndApplyBlock(highPrepareQC)
 		if err != nil {
 			m.nodeLogError(typesCons.ErrPrepareBlock.Error(), err)
 			m.paceMaker.InterruptRound("failed to prepare & apply block")
 			return
 		}
-		highPrepareQC = nil
+		// TODO! FIX THIS
+		//highPrepareQC = nil
 		m.block = block
 	} else {
 		// Leader acts like a replica if `prepareQC` is not `nil`
